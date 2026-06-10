@@ -1,0 +1,6 @@
+com\energy\usage_service\RabbitConfig.class
+com\energy\usage_service\UsageServiceApplication.class
+com\energy\usage_service\EnergyUsageRepository.class
+com\energy\usage_service\EnergyUsage.class
+com\energy\usage_service\EnergyMessage.class
+com\energy\usage_service\MessageListener.class
