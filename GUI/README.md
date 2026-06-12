@@ -1,6 +1,7 @@
 
-#Start über Terminal
+#Start service
+bash:
 mvn javafx:run
 
-#Starten des Bash Scripts
+#start all components with bash script
 .\start_all.cmd

@@ -1,5 +1,7 @@
 package com.example.energyapi;
 
+import com.example.energyapi.dto.CurrentEnergyDto;
+import com.example.energyapi.dto.HistoricalEnergyDto;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,12 +20,12 @@ public class EnergyController {
     }
 
     @GetMapping("/energy/current")
-    public CurrentEnergy getCurrentEnergy() {
+    public CurrentEnergyDto getCurrentEnergy() {
         return energyService.getCurrentEnergy();
     }
 
     @GetMapping("/energy/historical")
-    public List<HistoricalEnergy> getHistoricalEnergy(
+    public List<HistoricalEnergyDto> getHistoricalEnergy(
             @RequestParam String start,
             @RequestParam String end
     ) {

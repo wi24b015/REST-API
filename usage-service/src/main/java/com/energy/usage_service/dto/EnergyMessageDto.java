@@ -1,18 +1,18 @@
-package com.energy.energy_user;
+package com.energy.usage_service.dto;
 
 import java.io.Serializable;
 
-public class EnergyMessage implements Serializable {
+public class EnergyMessageDto implements Serializable {
 
     private String type;
     private String association;
     private double kwh;
     private String datetime;
 
-    public EnergyMessage() {
+    public EnergyMessageDto() {
     }
 
-    public EnergyMessage(String type, String association, double kwh, String datetime) {
+    public EnergyMessageDto(String type, String association, double kwh, String datetime) {
         this.type = type;
         this.association = association;
         this.kwh = kwh;

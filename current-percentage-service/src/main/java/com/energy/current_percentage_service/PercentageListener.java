@@ -1,34 +1,24 @@
 package com.energy.current_percentage_service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.amqp.core.Message;
+import com.energy.current_percentage_service.dto.EnergyUpdateDto;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
-
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.lang.reflect.Method;
 
 @Service
 public class PercentageListener {
 
     private final EnergyUsageRepository usageRepository;
     private final CurrentPercentageRepository percentageRepository;
-    private final ObjectMapper objectMapper;
 
     public PercentageListener(EnergyUsageRepository usageRepository,
-                              CurrentPercentageRepository percentageRepository,
-                              ObjectMapper objectMapper) {
+                              CurrentPercentageRepository percentageRepository) {
         this.usageRepository = usageRepository;
         this.percentageRepository = percentageRepository;
-        this.objectMapper = objectMapper;
     }
 
     @RabbitListener(queues = RabbitConfig.ENERGY_UPDATES_QUEUE)
-    public void handleUpdateMessage(Message message) {
+    public void handleUpdateMessage(EnergyUpdateDto updateMessage) {
         try {
-            EnergyUpdateMessage updateMessage = readUpdateMessage(message);
-
             if (updateMessage == null || updateMessage.getDatetime() == null) {
                 System.err.println("Ignored update message without datetime.");
                 return;
@@ -78,45 +68,6 @@ public class PercentageListener {
                 roundTwoDecimals(communityDepleted),
                 roundTwoDecimals(gridPortion)
         );
-    }
-
-    private EnergyUpdateMessage readUpdateMessage(Message message) throws Exception {
-        byte[] body = message.getBody();
-
-        try {
-            return objectMapper.readValue(body, EnergyUpdateMessage.class);
-        } catch (Exception ignored) {
-            // Current usage-service may send Java-serialized EnergyMessage because it has no JSON converter.
-        }
-
-        try (ObjectInputStream inputStream = new ObjectInputStream(new ByteArrayInputStream(body))) {
-            Object object = inputStream.readObject();
-            return convertObjectToUpdateMessage(object);
-        }
-    }
-
-    private EnergyUpdateMessage convertObjectToUpdateMessage(Object object) throws Exception {
-        EnergyUpdateMessage updateMessage = new EnergyUpdateMessage();
-        updateMessage.setType(readStringGetter(object, "getType"));
-        updateMessage.setAssociation(readStringGetter(object, "getAssociation"));
-        updateMessage.setDatetime(readStringGetter(object, "getDatetime"));
-        updateMessage.setKwh(readDoubleGetter(object, "getKwh"));
-        return updateMessage;
-    }
-
-    private String readStringGetter(Object object, String methodName) throws Exception {
-        Method method = object.getClass().getMethod(methodName);
-        Object value = method.invoke(object);
-        return value == null ? null : value.toString();
-    }
-
-    private double readDoubleGetter(Object object, String methodName) throws Exception {
-        Method method = object.getClass().getMethod(methodName);
-        Object value = method.invoke(object);
-        if (value instanceof Number number) {
-            return number.doubleValue();
-        }
-        return 0.0;
     }
 
     private String normalizeHour(String datetime) {

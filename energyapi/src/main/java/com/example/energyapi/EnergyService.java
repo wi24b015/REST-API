@@ -1,5 +1,7 @@
 package com.example.energyapi;
 
+import com.example.energyapi.dto.CurrentEnergyDto;
+import com.example.energyapi.dto.HistoricalEnergyDto;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,25 +20,25 @@ public class EnergyService {
         this.energyUsageRepository = energyUsageRepository;
     }
 
-    public CurrentEnergy getCurrentEnergy() {
+    public CurrentEnergyDto getCurrentEnergy() {
         return currentPercentageRepository.findTopByOrderByHourDesc()
-                .map(current -> new CurrentEnergy(
+                .map(current -> new CurrentEnergyDto(
                         current.getHour(),
                         current.getCommunityDepleted(),
                         current.getGridPortion()
                 ))
-                .orElseGet(() -> new CurrentEnergy(
+                .orElseGet(() -> new CurrentEnergyDto(
                         LocalDateTime.now().truncatedTo(ChronoUnit.HOURS).toString(),
                         0.0,
                         0.0
                 ));
     }
 
-    public List<HistoricalEnergy> getHistoricalEnergy(LocalDateTime start, LocalDateTime end) {
+    public List<HistoricalEnergyDto> getHistoricalEnergy(LocalDateTime start, LocalDateTime end) {
         return energyUsageRepository
                 .findByHourBetweenOrderByHourAsc(start.toString(), end.toString())
                 .stream()
-                .map(usage -> new HistoricalEnergy(
+                .map(usage -> new HistoricalEnergyDto(
                         usage.getHour(),
                         usage.getCommunityProduced(),
                         usage.getCommunityUsed(),

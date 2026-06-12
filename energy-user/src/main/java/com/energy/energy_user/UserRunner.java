@@ -1,5 +1,6 @@
 package com.energy.energy_user;
 
+import com.energy.energy_user.dto.EnergyMessageDto;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Profile;
@@ -26,7 +27,7 @@ public class UserRunner implements CommandLineRunner {
         while (true) {
             double kwh = calculateUsageKwh();
 
-            EnergyMessage message = new EnergyMessage(
+            EnergyMessageDto message = new EnergyMessageDto(
                     "USER",
                     "COMMUNITY",
                     kwh,

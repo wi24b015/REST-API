@@ -1,0 +1,8 @@
+com\energy\current_percentage_service\CurrentPercentage.class
+com\energy\current_percentage_service\EnergyUsageRepository.class
+com\energy\current_percentage_service\dto\EnergyUpdateDto.class
+com\energy\current_percentage_service\CurrentPercentageServiceApplication.class
+com\energy\current_percentage_service\EnergyUsage.class
+com\energy\current_percentage_service\RabbitConfig.class
+com\energy\current_percentage_service\CurrentPercentageRepository.class
+com\energy\current_percentage_service\PercentageListener.class

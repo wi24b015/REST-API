@@ -3,6 +3,9 @@ setlocal
 
 set "PROJECT=%~dp0"
 
+echo == Raeume alte Projekt-Prozesse auf ==
+call "%PROJECT%stop_all.cmd"
+
 echo == Starte Docker Infrastruktur ==
 pushd "%PROJECT%docker"
 docker compose up -d
@@ -14,28 +17,31 @@ if errorlevel 1 (
 popd
 
 echo == Starte API in neuem Terminal ==
-start "energyapi" /D "%PROJECT%energyapi" cmd /k mvn spring-boot:run
+start "energyapi" /D "%PROJECT%energyapi" cmd /k mvn clean spring-boot:run
 
 echo Warte 15 Sekunden auf API-Start...
 timeout /t 15 /nobreak > nul
 
+echo == Starte Usage Service in neuem Terminal ==
+start "usage-service" /D "%PROJECT%usage-service" cmd /k mvn clean spring-boot:run
+
+echo == Starte Current Percentage Service in neuem Terminal ==
+start "current-percentage-service" /D "%PROJECT%current-percentage-service" cmd /k mvn clean spring-boot:run
+
+echo Warte 10 Sekunden auf Consumer-Services...
+timeout /t 10 /nobreak > nul
+
 echo == Starte Producer in neuem Terminal ==
-start "energy-producer" /D "%PROJECT%energy-producer" cmd /k mvn spring-boot:run
+start "energy-producer" /D "%PROJECT%energy-producer" cmd /k mvn clean spring-boot:run
 
 echo == Starte User in neuem Terminal ==
-start "energy-user" /D "%PROJECT%energy-user" cmd /k mvn spring-boot:run
+start "energy-user" /D "%PROJECT%energy-user" cmd /k mvn clean spring-boot:run
 
 echo Warte 10 Sekunden auf erste Messages...
 timeout /t 10 /nobreak > nul
 
-echo == Starte Usage Service in neuem Terminal ==
-start "usage-service" /D "%PROJECT%usage-service" cmd /k mvn spring-boot:run
-
-echo == Starte Current Percentage Service in neuem Terminal ==
-start "current-percentage-service" /D "%PROJECT%current-percentage-service" cmd /k mvn spring-boot:run
-
 echo == Starte GUI in neuem Terminal ==
-start "energy-gui" /D "%PROJECT%GUI" cmd /k mvn javafx:run
+start "energy-gui" /D "%PROJECT%GUI" cmd /k mvn clean javafx:run
 
 echo.
 echo Live-Umgebung wurde gestartet.

@@ -7,6 +7,7 @@ import jakarta.persistence.*;
 public class EnergyUsage {
 
     @Id
+    @Column(length = 19)
     private String hour;
 
     @Column(name = "community_produced")
