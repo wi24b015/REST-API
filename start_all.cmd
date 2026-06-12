@@ -28,6 +28,12 @@ start "energy-user" /D "%PROJECT%energy-user" cmd /k mvn spring-boot:run
 echo Warte 10 Sekunden auf erste Messages...
 timeout /t 10 /nobreak > nul
 
+echo == Starte Usage Service in neuem Terminal ==
+start "usage-service" /D "%PROJECT%usage-service" cmd /k mvn spring-boot:run
+
+echo == Starte Current Percentage Service in neuem Terminal ==
+start "current-percentage-service" /D "%PROJECT%current-percentage-service" cmd /k mvn spring-boot:run
+
 echo == Starte GUI in neuem Terminal ==
 start "energy-gui" /D "%PROJECT%GUI" cmd /k mvn javafx:run
 
