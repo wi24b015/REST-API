@@ -1,6 +1,9 @@
 package com.energy.usage_service;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "energy_usage")
@@ -33,10 +36,6 @@ public class EnergyUsage {
         return hour;
     }
 
-    public void setHour(String hour) {
-        this.hour = hour;
-    }
-
     public double getCommunityProduced() {
         return communityProduced;
     }
@@ -61,4 +60,3 @@ public class EnergyUsage {
         this.gridUsed = gridUsed;
     }
 }
-
